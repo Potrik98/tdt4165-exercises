@@ -33,11 +33,7 @@ add n m = n + m
 -- hint: a string is a list
 -- hint2: use `elem` from Prelude
 isVowel :: Char -> Bool
-isVowel chr
-    | chr `elem` vowels = True
-    | otherwise = False
-    where
-        vowels = "aeiouAEIOU"
+isVowel chr = chr `elem` "aeuioyAEIOUY"
 
 data Status = One | Two | Three | None deriving (Show, Eq)
 
