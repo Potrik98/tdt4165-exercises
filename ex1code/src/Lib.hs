@@ -17,7 +17,6 @@ module Lib
 
 import Control.Monad (mapM_)
 import Prelude hiding (take)
-import Data.List
 
 -- TASK 1
 -- Simple functions
@@ -77,7 +76,10 @@ ending list = map (\s -> s ++ "ing") (filter (not . null) list)
 -- returns the first n elements of 
 -- the list
 takeInt :: Int -> [Int] -> [Int]
-takeInt n list = take n list
+takeInt _ [] = []
+takeInt n (x:xs)
+    | n < 1 = []
+    | otherwise = x : takeInt (n-1) xs
 
 -- implement "fizzbuzz" as described in exercise 1
 fizzbuzz :: [String]

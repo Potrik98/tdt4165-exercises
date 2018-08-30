@@ -15,8 +15,8 @@ fib21 = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765]
 
 cart = [(4,3),(4,7),(4,9),(6,3),(6,7),(6,9),(8,3),(8,7),(8,9)]
 
-vowels = "aeiouAEIOU"
-nonVowels = "0123456789:;<=>?@BCDFGHJKLMNPQRSTVWXYZ[\\]^_`bcdfghjklmnpqrstvwxyz"
+vowels = "aeiouyAEIOUY"
+nonVowels = "0123456789:;<=>?@BCDFGHJKLMNPQRSTVWXZ[\\]^_`bcdfghjklmnpqrstvwxz"
 
 main :: IO ()
 main = hspec $ do
