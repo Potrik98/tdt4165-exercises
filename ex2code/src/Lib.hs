@@ -24,13 +24,13 @@ import Prelude hiding (map, take, iterate, sqrt, Maybe)
 -- have? What if we fixed a = Int, does that change your
 -- previous answer?
 f0 :: a -> a
-f0 = undefined
+f0 a = a
 
 f1 :: a -> b -> a
-f1 = undefined
+f1 a b = a
 
 f2 :: a -> b -> b
-f2 = undefined
+f2 a b = b
 
 -- Rewrite the function "takeInt" from exercice 1 as "take" so
 -- that it accepts a list of any type. If you used the
@@ -38,7 +38,11 @@ f2 = undefined
 -- own implementation this time. Be sure to include a type
 -- signature. (Hint: If you already wrote takeInt, you won't
 -- have to change much.)
-take = undefined
+take :: Int -> [a] -> [a]
+take _ [] = []
+take n (x:xs)
+    | n < 1 = []
+    | otherwise = x : take (n-1) xs
 
 -- The function head :: [a] -> a which returns the first
 -- element of a list, is /partial/, meaning it will crash for
@@ -46,7 +50,8 @@ take = undefined
 -- /total/ function "safeHeadList :: [a] -> [a]" which either
 -- gives the head, or nothing. Can you implement it using take?
 safeHeadList :: [a] -> [a]
-safeHeadList = undefined
+safeHeadList [] = []
+safeHeadList (x:_) = [x]
 
 -- The output of safeHeadList is either empty or a singleton,
 -- and thus using a list as output-type is a bit misleading. A
@@ -55,16 +60,18 @@ data Maybe a = Some a | None deriving (Eq, Show)
 
 -- Implement 'safeHead', representing failure using None.
 safeHead :: [a] -> Maybe a
-safeHead = undefined
+safeHead [] = None
+safeHead (x:_) = Some x
 
 -- TASK 2
 -- Higher order functions
 
 map :: (a -> b) -> [a] -> [b]
-map = undefined
+map _ [] = []
+map f (x:xs) = f x : map f xs
 
 iterate :: (a -> a) -> a -> [a]
-iterate = undefined
+iterate f a = a : iterate f (f a)
 
 -- TASK 3
 -- Currying and partial application
@@ -75,7 +82,7 @@ iterate = undefined
 -- integers (including zero)
 -- use partial application to achieve this
 filterPos :: [Int] -> [Int]
-filterPos = undefined
+filterPos l = filter (>=0) l
 
 -- complete the function filterPosMany
 -- that takes a list of lists and returns
@@ -83,21 +90,32 @@ filterPos = undefined
 -- integers (including zero)
 -- hint: use filterPos and map
 filterPosMany :: [[Int]] -> [[Int]]
-filterPosMany = undefined
+filterPosMany l = map filterPos l
 
 flip3 :: (a -> b -> c -> d) -> c -> b -> a -> d
-flip3 = undefined
+flip3 f a b c = f c b a
+
+approxSqrt :: Double -> [Double]
+approxSqrt x = iterate (\x0 -> x0 - ((x0*x0 - x)/(2*x0))) 100
 
 -- TASK 4
 -- Infinite lists
 
-isPerfSq :: Double -> Bool
-isPerfSq = undefined
+isInt :: Double -> Double -> Bool
+isInt d p = abs (fromIntegral (round d) - d) < p
 
---uncomment when isPerfSqr is defined
---accuracy :: Int -> Bool
---accuracy x = take x generated == take x [x^2 | x <- [1..]]
---                where
---             zpd       = zip [1..] (map isPerfSq [1..])
---             f (x,y)   = y == True
---             generated = fst . unzip $ filter f zpd
+approx :: Double -> [Double] -> Double
+approx d (x:y:ys)
+    | abs (x-y) < d = y
+    | otherwise = approx d (y:ys)
+
+isPerfSq :: Double -> Bool
+isPerfSq d = isInt (approx p (approxSqrt d)) p
+    where p = 0.000001
+
+accuracy :: Int -> Bool
+accuracy x = take x generated == take x [x^2 | x <- [1..]]
+                where
+             zpd       = zip [1..] (map isPerfSq [1..])
+             f (x,y)   = y == True
+             generated = fst . unzip $ filter f zpd
